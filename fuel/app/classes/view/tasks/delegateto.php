@@ -7,7 +7,7 @@ class View_Tasks_Delegateto extends ViewModel
 	}
 
 	public function buildTaskForm($postdata = null) {
-		$fieldset = Fieldset::forge('delegated_task');
+		$fieldset = Fieldset::forge();
 
 		$fieldset->add_model('Model_Task')->repopulate($postdata);
 

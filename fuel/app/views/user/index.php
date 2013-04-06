@@ -28,7 +28,7 @@
 					<?php if (count($current_user->assigned_tasks) > 0): ?>
 					<ul>
 					<?php foreach($current_user->assigned_tasks as $task): ?>
-						<li><?php echo $task->title; ?></li> 
+						<li><a href="/task/<?php echo $task->id; ?>"><?php echo $task->title; ?></a> assigned by <a href="/user/<?php echo $task->originator->username; ?>"><?php echo $task->originator->username; ?></a></li> 
 					<?php endforeach; ?>
 					</ul>
 					<?php else: ?>
@@ -41,13 +41,13 @@
 					<?php if(count($current_user->delegated_tasks) > 0): ?>
 					<ul>
 					<?php foreach($current_user->delegated_tasks as $task): ?>
-						<li><?php echo $task->title; ?></li>
+						<li><a href="/task/<?php echo $task->id; ?>"><?php echo $task->title; ?></a> delegated to <a href="/user/<?php echo $task->owner->username; ?>"><?php echo $task->owner->username; ?></a></li>
 					<?php endforeach; ?>
 					</ul>
 					<?php else: ?>
 						<p>You have no tasks delegated</p>
 					<?php endif; ?>
-					<a href="" class="btn delegate-new-task">Delegate a task</a>
+					<a href="/tasks/delegate" class="btn delegate-new-task">Delegate a task</a>
 				</div>
 			</div>
 		</div>

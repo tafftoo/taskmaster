@@ -28,14 +28,14 @@
 					<?php if (count($user->assigned_tasks) > 0): ?>
 					<ul>
 					<?php foreach($user->assigned_tasks as $task): ?>
-						<li><?php echo $task->title; ?> assigned by <?php echo $task->originator->username; ?></li> 
+						<li><a href="/task/<?php echo $task->id; ?>"><?php echo $task->title; ?></a> assigned by <a href="/users/<?php echo $task->originator->username; ?>"><?php echo $task->originator->username; ?></a></li> 
 					<?php endforeach; ?>
 					</ul>
 					<?php else: ?>
 					<p><?php echo $user->username; ?> has no assigned tasks - <em>Lucky!</em></p>
 					<?php endif; ?>
-					<?php if ($current_user->isMasterOf($user)): ?>
-					<p><a href="/tasks/delegateto/<?php echo $user->username; ?>" class="btn">Delegate a task to this slave</a></p>
+					<?php if ($current_user && $current_user->isMasterOf($user)): ?>
+					<p><a href="/task/delegateto/<?php echo $user->username; ?>" class="btn">Delegate a task to this slave</a></p>
 					<?php endif; ?>
 				</div>
 				<div class="tab-pane" id="delegated">
@@ -44,13 +44,13 @@
 					<?php if(count($user->delegated_tasks) > 0): ?>
 					<ul>
 					<?php foreach($user->delegated_tasks as $task): ?>
-						<li><?php echo $task->title; ?> delegated to <?php echo $task->owner->username; ?></li>
+						<li><a href="/task/<?php echo $task->id; ?>"><?php echo $task->title; ?><a/> delegated to <a href="/users/<?php echo $task->owner->username; ?>"><?php echo $task->owner->username; ?></a>	</li>
 					<?php endforeach; ?>
 					</ul>
 					<?php else: ?>
 						<p><?php echo $user->username; ?> has no tasks delegated</p>
 					<?php endif; ?>
-					<a href="/tasks/delegate" class="btn delegate-new-task">Delegate a task</a>
+					<a href="/task/delegate" class="btn delegate-new-task">Delegate a task</a>
 				</div>
 			</div>
 		</div>

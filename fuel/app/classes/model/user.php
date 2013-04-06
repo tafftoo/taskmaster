@@ -222,4 +222,31 @@ class Model_User extends \Orm\Model
 		$fields[$name] = $value;
 		$this->profile_fields = serialize($fields);
 	}
+
+	/**
+	 * Returns a boolean indicating whether this user can view the given object
+	 *
+	 * @param object $object The object to test
+	 * @return boolean Indicating whether the user can view the object
+	 */
+	public function canView($object)
+	{
+		if ($object instanceof Model_Task)
+		{
+			return (
+				$this->id == $object->owner_id ||				// this user was assigned the task
+				$this->id == $object->originator_id ||			// this user assigned the task
+				$this->isMasterOf($object->originator_id) ||	// this users slave assigned the task
+				$this->isMasterOf($object->owner_id)			// this user slave was assigned the task
+				);
+		} 
+		else if ($object instanceof Model_User)
+		{
+			throw new Exception('Not implmented yet!');
+		}
+		else
+		{
+			throw new Exception('Unknown object');
+		}
+	}
 }

@@ -1,9 +1,61 @@
 <?php
 class Controller_Tasks extends Controller_Base
 {
+	public function action_view()
+	{
+		$task_id = $this->params('task_id');
+		$task = Model_Task::find($task_id);
+		if ($task && $this->current_user->canView($task))
+		{
+			$this->template->title = $task->title . ' assigned by ' . $task->originator->username;
+			$view = ViewModel::forge('tasks/view');
+			$view->set('task', $task, false);
+
+			$this->template->content = $view;
+		}
+		else
+		{
+			throw new HttpNotFoundException();
+		}
+	}
+
+	public function action_performaction()
+	{
+		$required_action = $this->param('action');
+		$task_id = $this->param('task_id');
+		$task = Model_Task::find($task_id);
+		if ($task && $this->current_user->canView($task)) {
+			switch($required_action) {
+			case 'start':
+				$task->status = Model_Task::$STATUS_IN_PROGRESS;
+				$task->started_at = time();
+				break;
+			case 'pause':
+				$task->status = Model_Task::$STATUS_PAUSED;
+				break;
+			case 'resume':
+				$task->status = Model_Task::$STATUS_IN_PROGRESS;
+				break;
+			case 'complete':
+				$task->status = Model_Task::$STATUS_COMPLETE;
+				$task->completed_at = time();
+				break;
+			default:
+				throw new HttpNotFoundException();
+			}
+			$task->save();
+			Response::redirect('/task/' . $task->id);
+		}
+		else
+		{
+			throw new HttpNotFoundException();
+		}
+	}
+
 	public function action_delegate()
 	{
-
+		$this->template->title = 'Choose a slave';
+		$this->template->content = ViewModel::forge('tasks/delegate');
 	}
 
 	public function action_delegateto()
