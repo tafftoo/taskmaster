@@ -25,7 +25,34 @@ class Model_User extends \Orm\Model
 		),
 	);
 
+	protected static $_has_many = array(
+		/**
+		 *	Tasks that have been assigned _TO_ this user
+		 */
+		'assigned_tasks' => array(
+			'model_to'			=> 'Model_Task',
+			'key_from'			=> 'id',
+			'key_to'			=> 'owner_id',
+			'cascade_save'		=> false,
+			'cascade_delete' 	=> false
+		),
+
+		/**
+		 *	Tasks that have been assigned _BY_ this user
+		 */
+		'delegated_tasks' => array(
+			'model_to' 			=> 'Model_Task',
+			'key_from'			=> 'id',
+			'key_to'			=> 'originator_id',
+			'cascade_save'		=> false,
+			'cascade_delete'	=> false
+		)
+	);
+
 	protected static $_many_many = array(
+		/**
+		 *	Users that can delegate tasks _TO_ this user
+		 */
 		'masters' => array(
 			'key_from' 				=> 'id',
 			'key_through_from' 		=> 'slave_id',
@@ -36,6 +63,9 @@ class Model_User extends \Orm\Model
 			'cascade_save'			=> false,
 			'cascade_delete'		=> false
 		),
+		/**
+		 *	Users that can be delegated tasks _BY_ this user
+		 */
 		'slaves' => array(
 			'key_from'				=> 'id',
 			'key_through_from'		=> 'master_id',
@@ -76,7 +106,7 @@ class Model_User extends \Orm\Model
 		}
 
 		if (is_string($new_master)) {
-			$new_master = Model_User::find_by_username($new_master);
+			$new_master = Model_User::query()->where('username', $new_master)->get_one();
 		}
 
 		if ($new_master instanceof Model_User) {
@@ -101,7 +131,7 @@ class Model_User extends \Orm\Model
 		}
 
 		if (is_string($new_slave)) {
-			$new_slave = Model_User::find_by_username($new_slave);
+			$new_slave = Model_User::query()->where('username', $new_slave)->get_one();
 		}
 
 		if ($new_slave instanceof Model_User) {
@@ -109,6 +139,52 @@ class Model_User extends \Orm\Model
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	/**
+	 * isMasterOf
+	 *
+	 * Returns a boolean indicating whether this user is a master of the specified user
+	 *
+	 * @param integer|string|Model_User $user the user to check
+	 * @return boolen Indicates whether this user is master of the specified user
+	 */
+	public function isMasterOf($user)
+	{
+		if (is_numeric($user)) {
+			$user = Model_User::find($user);
+		}
+
+		if (is_string($user)) {
+			$user = Model_User::query()->where('username', $user)->get_one();
+		}
+
+		if ($user instanceof Model_User) {
+			return in_array($user->id, array_keys($this->slaves));
+		}
+	}
+
+	/**
+	 * isSlaveTo
+	 *
+	 * Returns boolean indicating whether this user is a slave of the specified user
+	 *
+	 * @param integer|string|Model_User $user the user to check
+	 * @return boolean Indicates whether this user is a slave to the specified user
+	 */
+	public function isSlaveTo($user)
+	{
+		if (is_numeric($user)) {
+			$user = Model_User::find($user);
+		}
+
+		if (is_string($user)) {
+			$user = Model_User::query()->where('username', $user)->get_one();
+		}
+
+		if ($user instanceof Model_User) {
+			return in_array($user->id, array_keys($this->masters));
 		}
 	}
 

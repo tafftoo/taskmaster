@@ -25,8 +25,29 @@ class Model_Task extends \Orm\Model
 		'priority',
 		'latitude',
 		'longitude',
-		'created_at',
-		'updated_at',
+		'created_at' => array(
+			'skip' => true
+		),
+		'updated_at' => array(
+			'skip' => true
+		),
+	);
+
+	protected static $_has_one = array(
+		'owner' => array(
+			'model_to'			=> 'Model_User',
+			'key_from'			=> 'owner_id',
+			'key_to'			=> 'id',
+			'cascade_save'		=> false,
+			'cascade_delete' 	=> false			
+		),
+		'originator' => array(
+			'model_to'			=> 'Model_User',
+			'key_from'			=> 'originator_id',
+			'key_to'			=> 'id',
+			'cascade_save'		=> false,
+			'cascade_delete' 	=> false
+		)
 	);
 
 	protected static $_observers = array(
