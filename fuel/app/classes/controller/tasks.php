@@ -1,6 +1,12 @@
 <?php
 class Controller_Tasks extends Controller_Base
 {
+	public function action_index()
+	{
+		$this->template->title = 'Your Tasks';
+		$this->template->content = ViewModel::forge('tasks/index');
+	}
+
 	public function action_view()
 	{
 		$task_id = $this->params('task_id');

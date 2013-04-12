@@ -3,6 +3,7 @@ class Model_Task extends \Orm\Model
 {
 	public static $TYPE_DEADLINE = 1;
 	public static $TYPE_DUTY = 2;
+	public static $TYPE_ROUTINE = 3;
 
 	public static $STATUS_NEW = 1;
 	public static $STATUS_IN_PROGRESS = 2;
@@ -20,6 +21,8 @@ class Model_Task extends \Orm\Model
 		'started_at',
 		'completed_at',
 		'due_at',
+		'time_allocated',
+		'time_spent',
 		'sort_order',
 		'can_reorder',
 		'priority',

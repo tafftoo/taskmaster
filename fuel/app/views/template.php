@@ -8,7 +8,7 @@
 		body { margin: 50px; }
 	</style>
 	<?php echo Asset::js(array(
-		'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js',
+		'//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
 		'bootstrap.js'
 	)); ?>
 	<script>
@@ -21,31 +21,19 @@
 	<div class="navbar navbar-fixed-top">
 	    <div class="navbar-inner">
 	        <div class="container">
-	            <a href="#" class="brand">My Site</a>
+	            <a href="#" class="brand">Task Master</a>
 	            <ul class="nav">
-	                <li class="<?php echo Uri::segment(2) == '' ? 'active' : '' ?>">
-						<?php echo Html::anchor('admin', 'Dashboard') ?>
-					</li>
-
-					<?php foreach (glob(APPPATH.'classes/controller/admin/*.php') as $controller): ?>
-
-						<?php
-						$section_segment = basename($controller, '.php');
-						$section_title = Inflector::humanize($section_segment);
-						?>
-
-	                <li class="<?php echo Uri::segment(2) == $section_segment ? 'active' : '' ?>">
-						<?php echo Html::anchor('admin/'.$section_segment, $section_title) ?>
-					</li>
-					<?php endforeach; ?>
 	          </ul>
 
 	          <ul class="nav pull-right">
 
 	            <li class="dropdown">
-	              <a data-toggle="dropdown" class="dropdown-toggle" href="#"><?php echo $current_user->username ?> <b class="caret"></b></a>
-	              <ul class="dropdown-menu">
-	               <li><?php echo Html::anchor('admin/logout', 'Logout') ?></li>
+	            	<a data-toggle="dropdown" class="dropdown-toggle" href="#"><?php echo $current_user->username ?> <b class="caret"></b></a>
+	            	<ul class="dropdown-menu">
+	            		<li><?php echo Html::anchor('/tasks', 'Your Tasks') ?></li>
+	            		<li><?php echo Html::anchor('/user', 'Your Profile') ?></li>
+	            		<li class="divider"></li>
+	            		<li><?php echo Html::anchor('welcome/logout', 'Logout') ?></li>
 	              </ul>
 	            </li>
 	          </ul>
